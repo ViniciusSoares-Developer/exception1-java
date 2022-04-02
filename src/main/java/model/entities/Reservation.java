@@ -1,5 +1,7 @@
 package model.entities;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -39,8 +41,15 @@ public class Reservation {
         long diff = this.checkOut.getTime() - this.checkIn.getTime();
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
-    public void updateDates(Date checkIn, Date checkOut){
+    public String updateDates(@NotNull Date checkIn,@NotNull Date checkOut){
+        if(checkIn.before(new Date()) || checkOut.before(new Date())){
+            return "Reservation dates for update must be future dates";
+        }
+        if(!checkOut.after(checkIn)){
+            return "Check-out date must be after check-in date";
+        }
         this.checkIn = checkIn;
         this.checkOut = checkOut;
+        return null;
     }
 }
